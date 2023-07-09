@@ -41,29 +41,31 @@
             <div class="">
                 <nav id="modernSidebar">
                     <ul class="menu-categories pl-0 m-0" id="topAccordion">
+
                         <li class="menu">
-                            <a href="@Url.Action("Racks", "Racks", new { area = "Racks" })" data-toggle="collapse" aria-expanded="true" class="dropdown-toggle">
-                                <div class="">
-                                    <i class="flaticon-computer-6"></i>
-                                    <span>Racks</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="menu">
-                            <a href="@Url.Action("Shelves", "Shelves", new { area = "Shelves" })" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed">
-                                <div class="">
-                                    <i class="flaticon-3d-cube"></i>
-                                    <span>Shelves</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="menu">
-                            <a href="@Url.Action("Books", "Books", new { area = "Books" })" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed">
+                            <a href="#dashboard" data-toggle="collapse" aria-expanded="true" class="dropdown-toggle">
                                 <div class="">
                                     <i class="flaticon-table"></i>
                                     <span>Books</span>
                                 </div>
                             </a>
+                            <div class="collapse submenu list-unstyled eq-animated eq-fadeInUp" id="dashboard" data-parent="#topAccordion">
+                                <ul class="submenu-scroll">
+                                    <li>
+                                        <ul class="list-unstyled sub-submenu" id="dashboards">
+                                            <li class="active">
+                                                <a href="@Url.Action("Racks", "Racks", new { area = "Racks" })"> <div><i class="flaticon-computer-4"></i> Racks</div> </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Shelves", "Shelves", new { area = "Shelves" })"> <div><i class="flaticon-cart-2"></i> Shelves</div> </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Books", "Books", new { area = "Books" })"> <div><i class="flaticon-chart-line"></i> Books</div> </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
                     </ul>
                 </nav>
@@ -164,6 +166,8 @@
             App.init();
         });
     </script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/assets/js/custom.js"></script>
     <!-- END GLOBAL MANDATORY SCRIPTS -->
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
@@ -177,10 +181,14 @@
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
     <script src="~/plugins/table/datatable/datatables.js"></script>
     <!-- NOTE TO Use Copy CSV Excel PDF Print Options You Must Include These Files  -->
-    <script src="plugins/table/datatable/button-ext/dataTables.buttons.min.js"></script>
-    <script src="plugins/table/datatable/button-ext/jszip.min.js"></script>
-    <script src="plugins/table/datatable/button-ext/buttons.html5.min.js"></script>
-    <script src="plugins/table/datatable/button-ext/buttons.print.min.js"></script>
+    <script src="~/plugins/table/datatable/button-ext/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/table/datatable/button-ext/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script src="~/plugins/table/datatable/button-ext/buttons.html5.min.js"></script>
+    <script src="~/plugins/table/datatable/button-ext/buttons.print.min.js"></script>
+
+
     @if (IsSectionDefined("customScripts"))
     {
         @RenderSection("customScripts", required: false);

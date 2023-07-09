@@ -1,48 +1,89 @@
-﻿<div class="row">
-    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-header">
-                <div class="row">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <div class="input-group input-group-sm mb-4">
-                            <div class="input-group-prepend">
-                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Rack Code</span>
+﻿<form id="Add_shelf">
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+            <div class="statbox widget box box-shadow">
+                <div class="widget-header">
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                            <div class="input-group input-group-sm mb-4">
+                                <div class="input-group-prepend">
+                                    <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Rack Code</span>
+                                </div>
+                                <select class="form-control basic" id="rackId" name="rackId">
+                                </select>
                             </div>
-                            <select class="form-control basic" id="rackId">
-                            </select>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <div class="input-group input-group-sm mb-4">
-                            <div class="input-group-prepend">
-                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Shelf Code</span>
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                            <div class="input-group input-group-sm mb-4">
+                                <div class="input-group-prepend">
+                                    <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Shelf Code</span>
+                                </div>
+                                <input type="text" id="selfCode" name="selfCode" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                             </div>
-                            <input type="text" id="selfCode" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-12 d-flex justify-content-center">
-                        <button type="button" class="btn btn-primary" id="InsertShelf"> <i class="flaticon-plus-2"></i> Add </button>
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-12 d-flex justify-content-center">
+                            <button type="button" class="btn btn-primary" id="InsertShelf"> <i class="flaticon-plus-2"></i> Add </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</form>
 <script>
     $(function () {
-        getActiveRacks();
+        getActiveShelves();
+        validate();
     });
-    function getActiveRacks() {
+
+    var validate = function () {
+        $("#Add_shelf").validate({
+            focusInvalid: true,
+            rules: {
+                rackId: {
+                    required: true
+                },
+                selfCode: {
+                    required: true
+                }
+            },
+            messages: {
+                rackId: {
+                    required: "Please enter Rack ID"
+                },
+                selfCode: {
+                    required: "Please enter Code"
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('text-danger');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('text-danger');
+            },
+            errorElement: 'span',
+            errorClass: 'text-danger fw-bold',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    }
+
+    function getActiveShelves() {
     $.ajax({
         url: '@Url.Action("GetActiveShelves")',
         type: 'GET',
         dataType: 'json',
         success: function (data) {
-            var selectElement = $('#rackId'); 
+            var selectElement = $('#rackId');
             selectElement.empty();
             $.each(data, function (index, rack) {
                 var option = $('<option></option>');
@@ -57,30 +98,34 @@
     });
 }
 
-   $('#InsertShelf').click(function () {
-  var _shelfdata = {
-      selfRackId: $("#rackId").val(),
-      selfCode: $("#selfCode").val()
-  };
-       console.log(_shelfdata);
-  $.ajax({
-    type: "POST",
-    url: "@Url.Action("InsertShelves")",
-    contentType: "application/json",
-      data: JSON.stringify(_shelfdata), // Convert the data to JSON string
-    dataType: "json",
-      success: function (response) {
-          console.log(response);
-          alert(response.message);
-          if (response.rowsAffected != -1) {
-              getAllShelves();
-              $("#ShelfModal").modal("hide");
-}
-         
-    },
-    error: function (xhr) {
-      console.log("Error: " + xhr.statusText);
-    }
-  });
-});
+    $('#InsertShelf').click(function () {
+        if ($("#Add_shelf").valid()) {
+
+
+          var _shelfdata = {
+              selfRackId: $("#rackId").val(),
+              selfCode: $("#selfCode").val()
+          };
+               console.log(_shelfdata);
+          $.ajax({
+            type: "POST",
+            url: "@Url.Action("InsertShelves")",
+            contentType: "application/json",
+              data: JSON.stringify(_shelfdata), // Convert the data to JSON string
+            dataType: "json",
+              success: function (response) {
+                  console.log(response);
+                  alert(response.message);
+                  if (response.rowsAffected != -1) {
+                      getAllShelves();
+                      $("#ShelfModal").modal("hide");
+        }
+
+            },
+            error: function (xhr) {
+              console.log("Error: " + xhr.statusText);
+            }
+          });
+        }
+    });
 </script>

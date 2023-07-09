@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Shelves";
+    ViewBag.Title = "Books";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -11,13 +11,13 @@
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
                         <h4>
-                            <button type="button" class="btn btn-primary left" id="addSelf"> <i class="flaticon-plus-2"></i>Add Self</button>
+                            <button type="button" class="btn btn-primary left" id="addBook"> <i class="flaticon-plus-2"></i>Add Book</button>
                         </h4>
                     </div>
                 </div>
             </div>
 
-            <div class="modal fade" id="ShelfModal" role="dialog" tabindex="-1" data-backdrop="static">
+            <div class="modal fade" id="bookModal" role="dialog">
                 <div class="modal-dialog">
                     <!-- Modal content-->
                     <div class="modal-content">
@@ -32,16 +32,19 @@
                     </div>
                 </div>
             </div>
-            <div id="partialContainer"></div>
-
             <div class="widget-content widget-content-area">
                 <div class="table-responsive mb-4">
-                    <table id="tbl_shelves" class="table table-striped table-hover table-bordered" style="width:100%">
+                    <table id="tbl_books" class="table table-striped table-hover table-bordered" style="width:100%">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Shelf Code</th>
+                                <th>Book Code</th>
+                                <th>Book Name</th>
+                                <th>Author</th>
+                                <th>Is Available</th>
+                                <th>Price</th>
                                 <th>Rack Code</th>
+                                <th>Self Code</th>
                                 <th>Status</th>
                                 <th class="text-center">Edit</th>
                                 <th class="text-center">Delete</th>
@@ -57,19 +60,19 @@
     </div>
 </div>
 
-
 @section customScripts{
     <script>
         $(function () {
-            $('#tbl_shelves').DataTable({
+            $('#tbl_books').DataTable({
                 dom: '<"row"<"col-md-12"<"row"<"col-md-6"B><"col-md-6"f> > ><"col-md-12"rt> <"col-md-12"<"row"<"col-md-5 mb-md-0 mb-5"i><"col-md-7"p>>> >',
-                buttons: [
-                    //{ extend: 'copy', className: 'btn btn-default btn-rounded btn-sm mb-4' },
-                    { extend: 'csv', className: 'btn btn-default btn-rounded btn-sm mb-4' },
-                    { extend: 'excel', className: 'btn btn-default btn-rounded btn-sm mb-4' },
-                    { extend: 'pdfHtml5', className: 'btn btn-default btn-rounded btn-sm mb-4' },
-                    { extend: 'print', className: 'btn btn-default btn-rounded btn-sm mb-4' }
-                ],
+                buttons: {
+                    buttons: [
+                        { extend: 'copy', className: 'btn btn-default btn-rounded btn-sm mb-4' },
+                        { extend: 'pdf', className: 'btn btn-default btn-rounded btn-sm mb-4' },
+                        { extend: 'excel', className: 'btn btn-default btn-rounded btn-sm mb-4' },
+                        { extend: 'print', className: 'btn btn-default btn-rounded btn-sm mb-4' }
+                    ]
+                },
                 "language": {
                     "paginate": {
                         "previous": "<i class='flaticon-arrow-left-1'></i>",
@@ -78,38 +81,47 @@
                     "info": "Showing page _PAGE_ of _PAGES_"
                 }
             });
-
             getAllShelves();
         });
         //Get List Of Shelves
       function getAllShelves() {
     $.ajax({
-        url: '@Url.Action("getAllShelves", "Shelves", new { area = "Shelves" })',
+        url: '@Url.Action("getAllBooks", "getAllBooks", new { area = "getAllBooks" })',
         type: 'GET',
         dataType: 'json',
         success: function (data) {
-            var table = $('#tbl_shelves').DataTable();
+            var table = $('#tbl_books').DataTable();
             table.clear();
             for (var i = 0; i < data.length; i++) {
-                var self = data[i];
-                var editLink = '<center><a href="#" onclick="EditShelf(\'' + self.selfId + '\', \'' + self.selfCode + '\', \'' + self.selfRackId + '\')"><i class="flaticon-edit-7 text-success"></i></a></center>';
-                var deleteLink = '<center><a href="#" onclick="DeleteShelves(\'' + self.selfId + '\', \'' + self.selfCode + '\')"><i class="flaticon-delete-4 text-danger"></i></a></center>';
+                var Book = data[i];
+                var editLink = '<center><a href="#" onclick="EditShelf(\'' + Book.bookId + '\', \'' + book.selfCode + '\', \'' + book.selfRackId + '\')"><i class="flaticon-edit-7 text-success"></i></a></center>';
+                var deleteLink = '<center><a href="#" onclick="DeleteShelves(\'' + book.BookId + '\', \'' + book.selfCode + '\')"><i class="flaticon-delete-4 text-danger"></i></a></center>';
 
-                if (self.selfStatus != "Active" || self.rackStatus != "Active") {
+                if (book.selfStatus != "Active" || book.Book != "Active") {
                     var row = [
-                        self.selfId,
-                        self.selfCode,
-                        self.rackCode,
-                        self.selfStatus,
+                        book.BookId,
+                        book.BookCode,
+                        book.BookName,
+                        book.BookAuthor,
+                        book.BookIsAvail,
+                        book.BookPrice,
+                        book.rackCode,
+                        book.selfCode,
+                        book.BookStatus,
                         "",
                         ""
                     ];
                 } else {
                     var row = [
-                        self.selfId,
-                        self.selfCode,
-                        self.rackCode,
-                        self.selfStatus,
+                        book.BookId,
+                        book.BookCode,
+                        book.BookName,
+                        book.BookAuthor,
+                        book.BookIsAvail,
+                        book.BookPrice,
+                        book.rackCode,
+                        book.selfCode,
+                        book.BookStatus,
                         editLink,
                         deleteLink
 
@@ -127,14 +139,14 @@
 }
 
         //Calling Add Rack Partial View
-        $('#addSelf').click(function () {
+        $('#addBook').click(function () {
             $.ajax({
-                url: 'AddShelf',
+                url: 'AddBook',
                 type: 'GET',
                 dataType: 'html',
                 success: function (response) {
                     $('.modal-body').html(response);
-                    $("#ShelfModal").modal("show");
+                    $("#bookModal").modal("show");
                     $("#modalTitle").text("Add Shelf");
                 },
                 error: function (xhr, status, error) {

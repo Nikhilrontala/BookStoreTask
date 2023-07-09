@@ -145,13 +145,13 @@ END
 
 -- Get all self Details
 
-CREATE PROCEDURE SP_GetAllBooks
+Alter PROCEDURE SP_GetAllBooks
 with Encryption
 AS
 BEGIN
     SET NOCOUNT ON;
     
-    SELECT BSS.selfId,BSS.selfCode,BSS.selfStatus,BSR.rackCode,BOOK.BookId,BOOK.BookCode,BOOK.BookName,BOOK.BookAuthor,BOOK.BookIsAvail,BOOK.BookPrice,BOOK.BookselfId
+    SELECT BSS.selfId,BSS.selfCode,BSS.selfStatus,BSR.rackCode,BOOK.BookId,BOOK.BookCode,BOOK.BookName,BOOK.BookAuthor,BOOK.BookIsAvail,BOOK.BookPrice,BOOK.BookselfId,Book.BookStatus
     FROM BS_BOOKS BOOK INNER JOIN  BS_Shelves BSS ON BOOK.BookselfId= BSS.selfId
 	INNER JOIN BS_RACKS BSR ON BSR.rackId= BSS.selfRackId
 
@@ -182,4 +182,18 @@ BEGIN
     RAISERROR('Rack code already exists', 2,1)
   END
 
+END
+
+
+
+-- Get Active Shelves
+
+Create PROCEDURE SP_GetActiveShelves
+with Encryption
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT selfId, selfCode
+    FROM BS_Shelves where selfStatus ='Active'
 END

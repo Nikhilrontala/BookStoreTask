@@ -128,6 +128,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Books\BooksAreaRegistration.cs" />
+    <Compile Include="Areas\Books\Controllers\BooksController.cs" />
+    <Compile Include="Areas\Books\Data\DBBooks.cs" />
+    <Compile Include="Areas\Books\Data\mBooks.cs" />
     <Compile Include="Areas\Racks\Controllers\RacksController.cs" />
     <Compile Include="Areas\Racks\Data\DBRacks.cs" />
     <Compile Include="Areas\Racks\Data\mRacks.cs" />
@@ -1738,6 +1742,9 @@
     <Content Include="Areas\Shelves\Views\Shelves\Shelves.cshtml" />
     <Content Include="Areas\Shelves\Views\Shelves\AddShelf.cshtml" />
     <Content Include="Areas\Shelves\Views\Shelves\EditShelves.cshtml" />
+    <Content Include="Areas\Books\Views\web.config" />
+    <Content Include="Areas\Books\Views\Books\Books.cshtml" />
+    <Content Include="Areas\Books\Views\Books\AddBook.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -1767,6 +1774,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Books\Views\Shared\" />
     <Folder Include="Areas\Racks\Views\Shared\" />
     <Folder Include="Areas\Shelves\Views\Shared\" />
     <Folder Include="Models\" />

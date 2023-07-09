@@ -1,0 +1,142 @@
+﻿<div class="row">
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-header">
+
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Book Code</span>
+                            </div>
+                            <input type="text" id="bookCode" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Book Name</span>
+                            </div>
+                            <input type="text" id="BookName" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Author</span>
+                            </div>
+                            <input type="text" id="BookAuthor" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Availablity</span>
+                            </div>
+                            <select class="form-control basic" id="BookIsAvail">
+                                <option selected="selected">Available</option>
+                                <option>Out Of Stock</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Book Price</span>
+                            </div>
+                            <input type="text" id="BookPrice" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Self Code</span>
+                            </div>
+                            <select class="form-control basic" id="selfId">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12 d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary" id="InsertShelf"> <i class="flaticon-plus-2"></i> Add </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        getActiveShelves();
+
+        const inputElement = $("#BookPrice");
+        inputElement.on("input", function () {
+            const inputValue = inputElement.val();
+            const sanitizedValue = inputValue.replace(/[^\d.]/g, "");
+            const formattedValue = parseFloat(sanitizedValue).toFixed(2);
+            inputElement.val(formattedValue);
+        });
+    });
+    function getActiveShelves() {
+    $.ajax({
+        url: '@Url.Action("GetActiveShelves")',
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            console.log(data);
+            var selectElement = $('#selfId');
+            selectElement.empty();
+            $.each(data, function (index, shelf) {
+                var option = $('<option></option>');
+                option.val(shelf.selfId);
+                option.text(shelf.selfCode);
+                selectElement.append(option);
+            });
+        },
+        error: function (xhr) {
+            console.log(xhr);
+        }
+    });
+}
+
+   $('#InsertShelf').click(function () {
+  var _bookinsertdata = {
+      bookCode: $("#bookCode").val(),
+      BookName: $("#BookName").val(),
+      BookAuthor: $("#BookAuthor").val(),
+      BookIsAvail: $("#BookIsAvail").val(),
+      BookPrice: $("#BookPrice").val(),
+      selfId: $("#selfId").val()
+  };
+       console.log(_bookinsertdata);
+  $.ajax({
+    type: "POST",
+    url: "@Url.Action("InsertShelves")",
+    contentType: "application/json",
+      data: JSON.stringify(_bookinsertdata), // Convert the data to JSON string
+    dataType: "json",
+      success: function (response) {
+          console.log(response);
+          alert(response.message);
+          if (response.rowsAffected != -1) {
+              getAllShelves();
+              $("#ShelfModal").modal("hide");
+}
+    },
+    error: function (xhr) {
+      console.log("Error: " + xhr.statusText);
+    }
+  });
+});
+</script>
