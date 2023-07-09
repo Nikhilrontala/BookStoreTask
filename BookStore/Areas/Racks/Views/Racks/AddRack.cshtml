@@ -1,0 +1,47 @@
+﻿<div class="row">
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-header">
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Rack Code</span>
+                            </div>
+                            <input type="text" id="rackCode" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-12 col-md-12 col-sm-12 col-12 d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary" id="insertRack"> <i class="flaticon-plus-2"></i> Add </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+   $('#insertRack').click(function () {
+  var _data = {
+    rackCode: $("#rackCode").val()
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "@Url.Action("InsertRack")",
+    contentType: "application/json",
+    data: JSON.stringify(_data), // Convert the data to JSON string
+    dataType: "json",
+      success: function (response) {
+          console.log(response);
+          alert(response.message);
+          if (response.rowsAffected != -1) {
+              getAllRacks();
+              $("#myModal").modal("hide");
+          }
+    },
+    error: function (xhr) {
+      console.log("Error: " + xhr.statusText);
+    }
+  });
+});
+</script>

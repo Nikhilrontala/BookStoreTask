@@ -1,0 +1,50 @@
+﻿@model BookStore.Areas.Racks.Data.mRacks
+<div class="row">
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-header">
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Rack Code</span>
+                            </div>
+                            <input type="text" id="rackCode" value="@Model.rackCode" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                            @Html.HiddenFor(model => model.rackId)
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-12 col-md-12 col-sm-12 col-12 d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary" id="UpdateRack"> <i class="flaticon-plus-2"></i> Update </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#UpdateRack').click(function () {
+  var _data = {
+      rackCode: $("#rackCode").val(),
+      rackId: $("#rackId").val()
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "@Url.Action("UpdateRack")",
+    contentType: "application/json",
+    data: JSON.stringify(_data), // Convert the data to JSON string
+    dataType: "json",
+      success: function (response) {
+          console.log(response);
+          alert(response.message);
+          if (response.rowsAffected != -1) {
+              getAllRacks();
+              $("#myModal").modal("hide");
+          }
+    },
+    error: function (xhr) {
+      console.log("Error: " + xhr.statusText);
+    }
+  });
+});
+</script>

@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BookStoreModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BS_RACKS">
+          <Key>
+            <PropertyRef Name="rackId" />
+          </Key>
+          <Property Name="rackId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="rackName" Type="varchar" MaxLength="20" />
+          <Property Name="rackStatus" Type="varchar" MaxLength="8" />
+        </EntityType>
+        <Function Name="usp_GetAllRacks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="BookStoreModelStoreContainer">
+          <EntitySet Name="BS_RACKS" EntityType="Self.BS_RACKS" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BookStoreModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BS_RACKS">
+          <Key>
+            <PropertyRef Name="rackId" />
+          </Key>
+          <Property Name="rackId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="rackName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="rackStatus" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="BookStoreEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BS_RACKS" EntityType="Self.BS_RACKS" />
+          <FunctionImport Name="usp_GetAllRacks" ReturnType="Collection(BookStoreModel.usp_GetAllRacks_Result)" />
+        </EntityContainer>
+        <ComplexType Name="usp_GetAllRacks_Result">
+          <Property Type="Int32" Name="rackId" Nullable="false" />
+          <Property Type="String" Name="rackName" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="rackStatus" Nullable="true" MaxLength="8" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BookStoreModelStoreContainer" CdmEntityContainer="BookStoreEntities">
+          <EntitySetMapping Name="BS_RACKS">
+            <EntityTypeMapping TypeName="BookStoreModel.BS_RACKS">
+              <MappingFragment StoreEntitySet="BS_RACKS">
+                <ScalarProperty Name="rackId" ColumnName="rackId" />
+                <ScalarProperty Name="rackName" ColumnName="rackName" />
+                <ScalarProperty Name="rackStatus" ColumnName="rackStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetAllRacks" FunctionName="BookStoreModel.Store.usp_GetAllRacks">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BookStoreModel.usp_GetAllRacks_Result">
+                <ScalarProperty Name="rackId" ColumnName="rackId" />
+                <ScalarProperty Name="rackName" ColumnName="rackName" />
+                <ScalarProperty Name="rackStatus" ColumnName="rackStatus" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
