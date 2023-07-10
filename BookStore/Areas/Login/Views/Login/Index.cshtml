@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+    <title>Login-1 | Equation - Multipurpose Bootstrap Dashboard Template </title>
+    <link rel="icon" type="image/x-icon" href="~/assets/img/favicon.ico" />
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+    <link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/plugins.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/users/login-1.css" rel="stylesheet" type="text/css" />
+    <!-- END GLOBAL MANDATORY STYLES -->
+
+</head>
+<body class="login">
+    <form class="form-login">
+
+        <div class="row">
+            <div class="col-md-12 text-center mb-4">
+                <div class="alert alert-arrow-left alert-icon-left alert-light-danger mb-4" role="alert">
+                    <i class="flaticon-cancel-12 close" data-dismiss="alert"></i>
+                    <i class="flaticon-bell-13"></i>
+                    <div id="alertMsg"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center mb-4">
+                <img alt="logo" src="~/assets/img/logo-5.png" class="theme-logo">
+            </div>
+
+            <div class="col-md-12">
+                <label for="userName" class="">Login</label>
+                <input type="text" id="userName" class="form-control mb-4" placeholder="Login" required>
+                <label for="inputPassword" class="">Password</label>
+                <input type="password" id="userPass" class="form-control mb-5" placeholder="Password" required>
+                <div class="checkbox d-flex justify-content-between mb-4 mt-3">
+                    <div class="custom-control custom-checkbox mr-3">
+                        <input type="checkbox" class="custom-control-input" id="customCheck1" value="remember-me">
+                        <label class="custom-control-label" for="customCheck1">Remember</label>
+                    </div>
+                    <div class="forgot-pass">
+                        <a href="user_pass_recovery_1.html">Forgot Password?</a>
+                    </div>
+                </div>
+                <button id="btn_Login" class="btn btn-lg btn-gradient-danger btn-block btn-rounded mb-4 mt-5" type="submit">Login</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
+    <script src="~/assets/js/libs/jquery-3.1.1.min.js"></script>
+    <script src="~/assets/js/loader.js"></script>
+    <script src="~/bootstrap/js/popper.min.js"></script>
+    <script src="~/bootstrap/js/bootstrap.min.js"></script>
+
+
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <script src="~/plugins/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="~/assets/js/app.js"></script>
+
+    <script src="~/assets/js/custom.js"></script>
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- END GLOBAL MANDATORY SCRIPTS -->
+    <!-- BEGIN BACKEND CALLING SCRIPTS -->
+    <script>
+    function displayAlert(message, timeout) {
+        var alertMsg = $("#alertMsg");
+        alertMsg.html(message);
+        alertMsg.parent().fadeIn();
+
+        setTimeout(function() {
+            alertMsg.parent().fadeOut();
+        }, timeout);
+    }
+
+    $("#btn_Login").click(function (event) {
+        event.preventDefault();
+
+        var userName = $("#userName").val();
+        var userPass = $("#userPass").val();
+
+        var alertMsg = $("#alertMsg");
+        alertMsg.parent().hide(); // Hide the error message initially
+
+        if (userName === "") {
+            displayAlert("Please enter a username.", 3000);
+            return;
+        }
+
+        if (userPass === "") {
+            displayAlert("Please enter a password.", 3000);
+            return;
+        }
+
+        var data = {
+            BS_USER: userName,
+            BS_PASS: userPass
+        };
+
+        console.log(data);
+        $.ajax({
+            url: "@Url.Action("CheckLogin", "Login")",
+            type: "POST",
+            dataType: "HTML",
+            data: data,
+             success: function (response) {
+
+            // Check the response to determine if login was successful
+                 if (response === "success") {
+                    
+                // Redirect to the desired page
+                window.location.href = '@Url.Action("Books", "Books", new { area = "Books"})';
+            } else {
+                // Display an error message or handle the unsuccessful login
+                displayAlert("Invalid username or password.", 3000);
+            }
+            },
+            error: function (xhr) {
+                displayAlert("An error occurred. Please try again later.", 3000);
+                console.log(xhr);
+            }
+        });
+    });
+    </script>
+
+
+    <!-- END BACKEND CALLING SCRIPTS -->
+
+</body>
+</html>
+

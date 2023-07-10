@@ -158,7 +158,7 @@ BEGIN
 END
 
 
-CREATE PROCEDURE InsertBook
+ALTER PROCEDURE InsertBook
     @BookCode VARCHAR(20),
     @BookName VARCHAR(100),
     @BookAuthor VARCHAR(20),
@@ -171,18 +171,50 @@ BEGIN
     SET NOCOUNT ON;
 
 
-	 IF NOT EXISTS (SELECT 1 FROM BS_BOOKS WHERE  BookCode <> @BookCode and BookStatus='Active')
+IF NOT EXISTS (SELECT 1 FROM BS_BOOKS WHERE  BookCode = @BookCode and BookStatus<>'Active')
   BEGIN
      INSERT INTO BS_BOOKS (BookCode, BookName, BookAuthor, BookIsAvail, BookPrice, BookSelfId)
     VALUES (@BookCode, @BookName, @BookAuthor, @BookIsAvail, @BookPrice, @BookSelfId);
 
   END
-  ELSE
-  BEGIN
+ELSE
+BEGIN
     RAISERROR('Rack code already exists', 2,1)
-  END
+END
 
 END
+
+
+
+
+
+Alter PROCEDURE SP_UpdateBook
+    @BookCode VARCHAR(20),
+    @BookName VARCHAR(100),
+    @BookAuthor VARCHAR(20),
+    @BookIsAvail VARCHAR(20),
+    @BookPrice MONEY,
+    @BookselfId INT,
+    @BookId INT
+AS
+BEGIN
+ IF NOT EXISTS (SELECT 1 FROM BS_BOOKS WHERE BookCode = @BookCode and @BookId <> @BookId and BookStatus<>'Deleted')
+  BEGIN
+    UPDATE BS_BOOKS
+    SET BookCode = @BookCode,
+        BookName = @BookName,
+        BookAuthor = @BookAuthor,
+        BookIsAvail = @BookIsAvail,
+        BookPrice = @BookPrice,
+        BookselfId = @BookselfId
+    WHERE BookId = @BookId;
+	END
+ELSE
+  BEGIN
+    RAISERROR('-1', 2, 1)
+  END
+
+END;
 
 
 
@@ -196,4 +228,16 @@ BEGIN
     
     SELECT selfId, selfCode
     FROM BS_Shelves where selfStatus ='Active'
+END
+
+
+--Delete Shelves
+
+Create PROCEDURE SP_DeleteBook
+  @BookId INT
+AS
+BEGIN
+    UPDATE BS_Books
+    SET BookStatus = 'Deleted'
+    WHERE BookId = @BookId
 END

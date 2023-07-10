@@ -104,7 +104,7 @@ namespace BookStore.Areas.Shelves.Data
             {
                 SqlCommand command = new SqlCommand("SP_DeleteShelves", connection);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add("@selfId", SqlDbType.Int).Value = mShelves.@selfId;
+                command.Parameters.Add("@selfId", SqlDbType.Int).Value = mShelves.selfId;
                 connection.Open();
                 rowsAffected = command.ExecuteNonQuery();
                 connection.Close();

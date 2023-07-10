@@ -1,17 +1,17 @@
-﻿
-<form id="Add_books">
+﻿@model BookStore.Areas.Books.Data.mBooks
+
     <div class="row">
         <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
             <div class="statbox widget box box-shadow">
                 <div class="widget-header">
-
+                    @Html.HiddenFor(model => model.BookId)
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
                             <div class="input-group input-group-sm mb-4">
                                 <div class="input-group-prepend">
                                     <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Book Code</span>
                                 </div>
-                                <input type="text" id="bookCode" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                <input type="text" id="bookCode" value="@Model.BookCode" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                             </div>
                         </div>
                     </div>
@@ -21,7 +21,7 @@
                                 <div class="input-group-prepend">
                                     <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Book Name</span>
                                 </div>
-                                <input type="text" id="BookName" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                <input type="text" id="BookName" value="@Model.BookName" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                             </div>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                                 <div class="input-group-prepend">
                                     <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Author</span>
                                 </div>
-                                <input type="text" id="BookAuthor" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                <input type="text" id="BookAuthor" value="@Model.BookAuthor" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                             </div>
                         </div>
                     </div>
@@ -42,8 +42,16 @@
                                     <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Availablity</span>
                                 </div>
                                 <select class="form-control basic" id="BookIsAvail">
-                                    <option selected="selected">Available</option>
-                                    <option>Out Of Stock</option>
+                                    @if (Model.BookIsAvail == "Available")
+                                    {
+                                        <option selected="selected">Available</option>
+                                        <option>Out Of Stock</option>
+                                    }
+                                    else
+                                    {
+                                        <option >Available</option>
+                                        <option selected="selected">Out Of Stock</option>
+                                    }
                                 </select>
                             </div>
                         </div>
@@ -54,7 +62,7 @@
                                 <div class="input-group-prepend">
                                     <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Book Price</span>
                                 </div>
-                                <input type="text" id="BookPrice" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                <input type="text" id="BookPrice"  value="@Model.BookPrice" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                             </div>
                         </div>
                     </div>
@@ -72,14 +80,13 @@
                     </div>
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12 d-flex justify-content-center">
-                            <button type="button" class="btn btn-primary" id="InsertBooks"> <i class="flaticon-plus-2"></i> Add </button>
+                            <button type="button" class="btn btn-primary" id="UpdateBooks"> <i class="flaticon-plus-2"></i> Update </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</form>
 
 <script>
     $(function () {
@@ -173,6 +180,7 @@
                 option.text(shelf.selfCode);
                 selectElement.append(option);
             });
+            selectElement.val('@Model.BookselfId');
         },
         error: function (xhr) {
             console.log(xhr);
@@ -180,29 +188,29 @@
     });
 }
 
-    $('#InsertBooks').click(function () {
-        e.preventDefault();
-            if ($("#Add_books").valid()) {
-                var _bookinsertdata = {
+    $('#UpdateBooks').click(function () {
+       
+                var _updateinsertdata = {
                     BookCode: $("#bookCode").val(),
                     BookName: $("#BookName").val(),
                     BookAuthor: $("#BookAuthor").val(),
                     BookIsAvail: $("#BookIsAvail").val(),
                     BookPrice: $("#BookPrice").val(),
-                    BookselfId: $("#selfId").val()
+                    BookselfId: $("#selfId").val(),
+                    BookId: $("#BookId").val()
                 };
-                console.log(_bookinsertdata);
+                console.log(_updateinsertdata);
                 $.ajax({
                     type: "POST",
-                    url: "@Url.Action("InsertBooks")",
+                    url: "@Url.Action("UpdateBook")",
                     contentType: "application/json",
-                    data: JSON.stringify(_bookinsertdata), // Convert the data to JSON string
+                    data: JSON.stringify(_updateinsertdata), // Convert the data to JSON string
                     dataType: "json",
                     success: function (response) {
                         console.log(response);
                         alert(response.message);
                         if (response.rowsAffected != -1) {
-                            getAllShelves();
+                            getAllBooks();
                             $("#bookModal").modal("hide");
                         }
                     },
@@ -210,6 +218,5 @@
                         console.log("Error: " + xhr.statusText);
                     }
                 });
-            }
 });
 </script>

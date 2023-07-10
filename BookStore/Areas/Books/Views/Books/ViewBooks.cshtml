@@ -1,0 +1,73 @@
+﻿@model BookStore.Areas.Books.Data.mBooks
+
+<div class="row">
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-header">
+                @Html.HiddenFor(model => model.BookId)
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Book Code</span>
+                            </div>
+                            <input type="text" id="bookCode" readonly value="@Model.BookCode" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Book Name</span>
+                            </div>
+                            <input type="text" id="BookName" readonly value="@Model.BookName" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Author</span>
+                            </div>
+                            <input type="text" id="BookAuthor" readonly value="@Model.BookAuthor" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Availablity</span>
+                            </div>
+                                <input type="text" id="BookPrice" readonly value="@Model.BookIsAvail" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Book Price</span>
+                            </div>
+                            <input type="text" id="BookPrice" readonly value="@Model.BookPrice" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div class="input-group input-group-sm mb-4">
+                            <div class="input-group-prepend">
+                                <span class="form-control-rounded-left input-group-text" id="inputGroup-sizing-sm">Self Code</span>
+                            </div>
+                            <input type="text" id="BookPrice" readonly value="@Model.selfCode" class="form-control-rounded-right form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

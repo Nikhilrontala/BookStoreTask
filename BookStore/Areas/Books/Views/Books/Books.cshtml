@@ -46,6 +46,7 @@
                                 <th>Rack Code</th>
                                 <th>Self Code</th>
                                 <th>Status</th>
+                                <th class="text-center">View</th>
                                 <th class="text-center">Edit</th>
                                 <th class="text-center">Delete</th>
                             </tr>
@@ -81,62 +82,85 @@
                     "info": "Showing page _PAGE_ of _PAGES_"
                 }
             });
-            getAllShelves();
+            getAllBooks();
         });
         //Get List Of Shelves
-      function getAllShelves() {
-    $.ajax({
-        url: '@Url.Action("getAllBooks", "getAllBooks", new { area = "getAllBooks" })',
-        type: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            var table = $('#tbl_books').DataTable();
-            table.clear();
-            for (var i = 0; i < data.length; i++) {
-                var Book = data[i];
-                var editLink = '<center><a href="#" onclick="EditShelf(\'' + Book.bookId + '\', \'' + book.selfCode + '\', \'' + book.selfRackId + '\')"><i class="flaticon-edit-7 text-success"></i></a></center>';
-                var deleteLink = '<center><a href="#" onclick="DeleteShelves(\'' + book.BookId + '\', \'' + book.selfCode + '\')"><i class="flaticon-delete-4 text-danger"></i></a></center>';
+        function getAllBooks() {
+            $.ajax({
+                url: '@Url.Action("getAllBooks", "Books", new { area = "Books" })',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    var table = $('#tbl_books').DataTable();
+                    table.clear();
+                    var totalBookPrice = 0;
+                    for (var i = 0; i < data.length; i++) {
+                
+                        var book = data[i];
+                        var editLink = '<center><a href="#" onclick="EditBook(\'' + book.BookId + '\', \'' + book.BookCode + '\', \'' + book.BookName + '\', \'' + book.BookAuthor + '\', \'' + book.BookIsAvail + '\', \'' + book.selfCode + '\', \'' + book.BookselfId + '\', \'' + book.BookPrice + '\')"><i class="flaticon-edit-7 text-success"></i></a></center>';
+                        var ViewLink = '<center><a href="#" onclick="ViewBook(\'' + book.BookId + '\', \'' + book.BookCode + '\', \'' + book.BookName + '\', \'' + book.BookAuthor + '\', \'' + book.BookIsAvail + '\', \'' + book.selfCode + '\', \'' + book.BookselfId + '\', \'' + book.BookPrice + '\')"><i class="flaticon-view-1 text-success"></i></a></center>';
+                        var deleteLink = '<center><a href="#" onclick="DeleteShelves(\'' + book.BookId + '\', \'' + book.selfCode + '\')"><i class="flaticon-delete-4 text-danger"></i></a></center>';
+                        totalBookPrice += parseFloat(book.BookPrice);
+                        if (book.selfStatus != "Active" || book.BookStatus != "Active") {
+                            var row = [
+                                book.BookId,
+                                book.BookCode,
+                                book.BookName,
+                                book.BookAuthor,
+                                book.BookIsAvail,
+                                book.BookPrice,
+                                book.rackCode,
+                                book.selfCode,
+                                book.BookStatus,
+                                ViewLink,
+                                "",
+                                ""
+                            ];
+                        } else {
+                            var row = [
+                                book.BookId,
+                                book.BookCode,
+                                book.BookName,
+                                book.BookAuthor,
+                                book.BookIsAvail,
+                                book.BookPrice,
+                                book.rackCode,
+                                book.selfCode,
+                                book.BookStatus,
+                                ViewLink,
+                                editLink,
+                                deleteLink
 
-                if (book.selfStatus != "Active" || book.Book != "Active") {
-                    var row = [
-                        book.BookId,
-                        book.BookCode,
-                        book.BookName,
-                        book.BookAuthor,
-                        book.BookIsAvail,
-                        book.BookPrice,
-                        book.rackCode,
-                        book.selfCode,
-                        book.BookStatus,
-                        "",
-                        ""
-                    ];
-                } else {
-                    var row = [
-                        book.BookId,
-                        book.BookCode,
-                        book.BookName,
-                        book.BookAuthor,
-                        book.BookIsAvail,
-                        book.BookPrice,
-                        book.rackCode,
-                        book.selfCode,
-                        book.BookStatus,
-                        editLink,
-                        deleteLink
-
-                    ];
+                            ];
+                        }
+                        table.row.add(row);
+                    }
+                    table.draw();
+                    // Manually append the footer row using DataTables API
+                    var footerRow = $('<tr>').append(
+                        '<th></th>',
+                        '<th></th>',
+                        '<th></th>',
+                        '<th></th>',
+                        '<th></th>',
+                        '<th>Total: ' + totalBookPrice.toFixed(2) + '</th>',
+                        '<th></th>',
+                        '<th></th>',
+                        '<th></th>',
+                        '<th></th>',
+                        '<th></th>'
+                    );
+                    table
+                        .footer()
+                        .empty()
+                        .append(footerRow);
+                },
+                error: function (xhr) {
+                    console.log(xhr);
                 }
-                table.row.add(row);
-            }
-
-            table.draw();
-        },
-        error: function (xhr) {
-            console.log(xhr);
+            });
         }
-    });
-}
 
         //Calling Add Rack Partial View
         $('#addBook').click(function () {
@@ -147,7 +171,7 @@
                 success: function (response) {
                     $('.modal-body').html(response);
                     $("#bookModal").modal("show");
-                    $("#modalTitle").text("Add Shelf");
+                    $("#modalTitle").text("Add Book");
                 },
                 error: function (xhr, status, error) {
                     // Handle the error
@@ -155,23 +179,60 @@
                 }
             });
         });
-        //Calling Edit Rack Partial View
-        function EditShelf(selfId, selfCode, selfRackId) {
+
+
+        function EditBook(bookId, BookCode, BookName, BookAuthor, BookIsAvail, selfCode, BookselfId, BookPrice) {
             var _editdata = {
 
-                selfId: selfId,
+                bookId: bookId,
+                BookCode: BookCode,
+                BookName: BookName,
+                BookAuthor: BookAuthor,
+                BookIsAvail: BookIsAvail,
                 selfCode: selfCode,
-                selfRackId: selfRackId
+                BookselfId: BookselfId,
+                BookPrice: BookPrice 
             };
             $.ajax({
-                url: 'EditShelves',
+                url: 'EditBooks',
                 type: 'GET',
                 dataType: 'html',
                 data: _editdata,
                 success: function (response) {
                     $('.modal-body').html(response);
-                    $("#ShelfModal").modal("show");
-                    $("#modalTitle").text("Edit Rack");
+                    $("#bookModal").modal("show");
+                    $("#modalTitle").text("Edit Book");
+
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error
+                    console.error(error);
+                }
+            });
+        }
+
+
+        function ViewBook(bookId, BookCode, BookName, BookAuthor, BookIsAvail, selfCode, BookselfId, BookPrice) {
+            var _editdata = {
+
+                bookId: bookId,
+                BookCode: BookCode,
+                BookName: BookName,
+                BookAuthor: BookAuthor,
+                BookIsAvail: BookIsAvail,
+                selfCode: selfCode,
+                BookselfId: BookselfId,
+                BookPrice: BookPrice
+            };
+            $.ajax({
+                url: 'ViewBooks',
+                type: 'GET',
+                dataType: 'html',
+                data: _editdata,
+                success: function (response) {
+                    $('.modal-body').html(response);
+                    $("#bookModal").modal("show");
+                    $("#modalTitle").text("View Book");
 
                 },
                 error: function (xhr, status, error) {
@@ -182,18 +243,18 @@
         }
 
         //Delete Rack
-        function DeleteShelves(selfId, selfCode) {
-            var _delshdata = { selfId: selfId };
+        function DeleteShelves(BookId, BookCode) {
+            var _delshdata = { BookId: BookId };
                       $.ajax({
                         type: "POST",
-                        url: "@Url.Action("DeleteShelves")",
+                        url: "@Url.Action("DeleteBooks")",
                         contentType: "application/json",
                           data: JSON.stringify(_delshdata), // Convert the data to JSON string
                         dataType: "json",
                           success: function (response) {
                               console.log(response);
                               alert(response.message);
-                              getAllShelves();
+                              getAllBooks();
                         },
                         error: function (xhr) {
                           console.log("Error: " + xhr.statusText);
